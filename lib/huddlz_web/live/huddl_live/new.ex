@@ -333,6 +333,12 @@ defmodule HuddlzWeb.HuddlLive.New do
           />
         <% end %>
 
+        <.input
+          field={@form[:capacity]}
+          type="number"
+          label="Capacity"
+        />
+
         <%= if @group.is_public do %>
           <.input
             field={@form[:is_private]}

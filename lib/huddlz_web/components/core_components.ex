@@ -684,6 +684,11 @@ defmodule HuddlzWeb.CoreComponents do
         <div class="absolute top-2 left-2">
           <.huddl_type_badge type={@huddl.event_type} />
         </div>
+        <%= if @huddl.capacity do %>
+          <div class="absolute top-8 left-2">
+            <.huddl_capacity_badge capacity={@huddl.capacity} rsvp_count={@huddl.rsvp_count} />
+          </div>
+        <% end %>
       </div>
       <div class="card-body">
         <div class="flex flex-col h-full justify-between">
@@ -765,6 +770,24 @@ defmodule HuddlzWeb.CoreComponents do
       @class
     ]}>
       {@status |> to_string() |> String.replace("_", " ") |> String.capitalize()}
+    </span>
+    """
+  end
+
+  @doc """
+    Renders a badge with capacity status
+  """
+  attr :capacity, :integer, required: true
+  attr :rsvp_count, :integer, required: true
+  attr :class, :string, default: nil
+
+  def huddl_capacity_badge(assigns) do
+    ~H"""
+    <span class={[
+      "badge badge-sm font-semibold badge-warning",
+      @class
+    ]}>
+      {capacity_text(assigns.capacity, assigns.rsvp_count)}
     </span>
     """
   end
@@ -993,5 +1016,16 @@ defmodule HuddlzWeb.CoreComponents do
     hour_str = hour |> Integer.to_string() |> String.pad_leading(2, "0")
     minute_str = minute |> Integer.to_string() |> String.pad_leading(2, "0")
     "#{hour_str}:#{minute_str}"
+  end
+
+  defp capacity_text(capacity, rsvp_count) do
+    capacity_percentage = rsvp_count / capacity
+
+    case capacity_percentage do
+      n when n <= 0.25 -> "Plenty of Space"
+      n when n <= 0.5 -> "Filling Up"
+      n when n < 1 -> "Almost Full"
+      n when n == 1 -> "Full"
+    end
   end
 end

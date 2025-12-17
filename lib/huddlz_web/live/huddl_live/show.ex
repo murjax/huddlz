@@ -64,6 +64,9 @@ defmodule HuddlzWeb.HuddlLive.Show do
         <:subtitle>
           <.huddl_status_badge status={@huddl.status} />
           <.huddl_type_badge type={@huddl.event_type} class="ml-2" />
+          <%= if @huddl.capacity do %>
+            <.huddl_capacity_badge capacity={@huddl.capacity} rsvp_count={@huddl.rsvp_count} />
+          <% end %>
           <%= if @huddl.is_private do %>
             <span class="badge badge-neutral ml-2">Private</span>
           <% end %>
@@ -86,9 +89,9 @@ defmodule HuddlzWeb.HuddlLive.Show do
           <% end %>
           <%= if @current_user && @huddl.status == :upcoming do %>
             <%= if @has_rsvped do %>
-              <div class="flex items-center gap-4">
+              <div class="flex items-center gap-4 mt-2">
                 <div class="text-success font-semibold">
-                  <.icon name="hero-check-circle" class="h-5 w-5 inline" /> You're attending!
+                  <.icon name="hero-check-circle" class="h-5 w-5" /> You're attending!
                 </div>
                 <.button
                   phx-click="cancel_rsvp"
@@ -99,9 +102,15 @@ defmodule HuddlzWeb.HuddlLive.Show do
                 </.button>
               </div>
             <% else %>
-              <.button phx-click="rsvp" class="btn-primary">
-                RSVP to this huddl
-              </.button>
+              <%= if @huddl.rsvp_count == @huddl.capacity do %>
+                <div class="text-error font-semibold mt-2">
+                  <.icon name="hero-no-symbol" class="h-5 w-5" /> Event Full
+                </div>
+              <% else %>
+                <.button phx-click="rsvp" class="btn-primary mt-2">
+                  RSVP to this huddl
+                </.button>
+              <% end %>
             <% end %>
           <% end %>
         </:actions>
@@ -189,6 +198,15 @@ defmodule HuddlzWeb.HuddlLive.Show do
               <% end %>
             </p>
           </div>
+
+          <%= if @huddl.capacity do %>
+            <div class="mt-8">
+              <h3>Capacity</h3>
+              <p class="flex items-center gap-2">
+                {@huddl.rsvp_count}/{@huddl.capacity} spots filled
+              </p>
+            </div>
+          <% end %>
 
           <div class="mt-8">
             <h3>Group</h3>

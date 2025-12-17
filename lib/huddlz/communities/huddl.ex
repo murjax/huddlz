@@ -38,6 +38,7 @@ defmodule Huddlz.Communities.Huddl do
         :virtual_link,
         :is_private,
         :rsvp_count,
+        :capacity,
         :thumbnail_url,
         :creator_id,
         :group_id,
@@ -76,6 +77,7 @@ defmodule Huddlz.Communities.Huddl do
         :virtual_link,
         :is_private,
         :rsvp_count,
+        :capacity,
         :thumbnail_url,
         :huddl_template_id
       ]
@@ -199,6 +201,7 @@ defmodule Huddlz.Communities.Huddl do
       change fn changeset, _context ->
         user_id = Ash.Changeset.get_argument(changeset, :user_id)
         huddl_id = changeset.data.id
+        capacity = changeset.data.capacity
 
         # Check if already RSVPed
         existing =
@@ -208,10 +211,13 @@ defmodule Huddlz.Communities.Huddl do
 
         case existing do
           {:ok, nil} ->
-            # Create RSVP
-            Huddlz.Communities.HuddlAttendee
-            |> Ash.Changeset.for_create(:rsvp, %{huddl_id: huddl_id, user_id: user_id})
-            |> Ash.create!(authorize?: false)
+            changeset =
+              if capacity && capacity > 0 do
+                changeset
+                |> Ash.Changeset.filter({:rsvp_count, [lt: Map.get(changeset.data, :capacity)]})
+              else
+                changeset
+              end
 
             # Increment count
             Ash.Changeset.atomic_update(changeset, :rsvp_count, expr(rsvp_count + 1))
@@ -223,6 +229,31 @@ defmodule Huddlz.Communities.Huddl do
           {:error, error} ->
             Ash.Changeset.add_error(changeset, error)
         end
+      end
+
+      change fn changeset, _context ->
+        Ash.Changeset.after_action(changeset, fn changeset, huddl ->
+          user_id = Ash.Changeset.get_argument(changeset, :user_id)
+
+          # Check if already RSVPed
+          existing =
+            Huddlz.Communities.HuddlAttendee
+            |> Ash.Query.for_read(:check_rsvp, %{huddl_id: huddl.id, user_id: user_id})
+            |> Ash.read_one(authorize?: false)
+
+          case existing do
+            {:ok, nil} ->
+              # Create RSVP
+              Huddlz.Communities.HuddlAttendee
+              |> Ash.Changeset.for_create(:rsvp, %{huddl_id: huddl.id, user_id: user_id})
+              |> Ash.create!(authorize?: false)
+
+              {:ok, huddl}
+
+            _ ->
+              {:ok, huddl}
+          end
+        end)
       end
     end
 
@@ -252,15 +283,35 @@ defmodule Huddlz.Communities.Huddl do
             changeset
 
           {:ok, attendee} ->
-            # Delete the attendee record
-            Ash.destroy!(attendee, authorize?: false)
-
             # Decrement count
             Ash.Changeset.atomic_update(changeset, :rsvp_count, expr(rsvp_count - 1))
 
           {:error, error} ->
             Ash.Changeset.add_error(changeset, error)
         end
+      end
+
+      change fn changeset, _context ->
+        Ash.Changeset.after_action(changeset, fn changeset, huddl ->
+          user_id = Ash.Changeset.get_argument(changeset, :user_id)
+
+          # Find the existing RSVP
+          existing =
+            Huddlz.Communities.HuddlAttendee
+            |> Ash.Query.for_read(:check_rsvp, %{huddl_id: huddl.id, user_id: user_id})
+            |> Ash.read_one(authorize?: false)
+
+          case existing do
+            {:ok, attendee} ->
+              # Delete the attendee record
+              Ash.destroy!(attendee, authorize?: false)
+
+              {:ok, huddl}
+
+            _ ->
+              {:ok, huddl}
+          end
+        end)
       end
     end
   end
@@ -391,6 +442,15 @@ defmodule Huddlz.Communities.Huddl do
       where attribute_equals(:event_type, :hybrid)
       message "both physical location and virtual link are required for hybrid events"
     end
+
+    validate compare(:capacity, greater_than_or_equal_to: :rsvp_count) do
+      message "must be greater than or equal to current RSVPs"
+    end
+
+    validate compare(:rsvp_count, less_than_or_equal_to: :capacity) do
+      message "cannot exceed capacity"
+      where present(:capacity)
+    end
   end
 
   attributes do
@@ -436,6 +496,10 @@ defmodule Huddlz.Communities.Huddl do
     attribute :rsvp_count, :integer do
       allow_nil? false
       default 0
+    end
+
+    attribute :capacity, :integer do
+      allow_nil? true
     end
 
     attribute :thumbnail_url, :string do

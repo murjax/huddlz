@@ -401,6 +401,12 @@ defmodule HuddlzWeb.HuddlLive.Edit do
           />
         <% end %>
 
+        <.input
+          field={@form[:capacity]}
+          type="number"
+          label="Capacity"
+        />
+
         <%= if @huddl.group.is_public do %>
           <.input
             field={@form[:is_private]}
