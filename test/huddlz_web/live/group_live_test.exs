@@ -2,6 +2,7 @@ defmodule HuddlzWeb.GroupLiveTest do
   use HuddlzWeb.ConnCase, async: true
 
   import Huddlz.Generator
+  import Phoenix.LiveViewTest
 
   alias Huddlz.Communities.Group
 
