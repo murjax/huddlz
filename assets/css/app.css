@@ -2340,6 +2340,25 @@ body .form-clear:hover { color: var(--text); }
 body .btn-secondary.muted-btn { color: var(--muted); }
 body .btn-secondary.muted-btn:hover { color: var(--warn); border-color: var(--warn); }
 
+body .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, background-color 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+body .icon-btn:hover { color: var(--text); background: rgba(244, 251, 251, 0.06); }
+body .icon-btn.danger { color: var(--magenta); }
+body .icon-btn.danger:hover { color: var(--magenta); background: rgba(232, 79, 180, 0.1); }
+
 body .profile-photo-row {
   display: flex;
   gap: 24px;

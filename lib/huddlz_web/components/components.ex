@@ -3,9 +3,9 @@ defmodule HuddlzWeb.Components do
   Design components facade.
 
   Each function component (`<.avatar>`, `<.button>`, `<.card>`, `<.chip>`,
-  `<.flash>`, `<.icon>`, `<.input>`, `<.list_row>`, `<.modal>`,
-  `<.pagination>`, `<.panel>`, `<.pill>`) lives in its own module under this
-  namespace and renders the vocabulary from the clickthrough mockup at
+  `<.flash>`, `<.icon>`, `<.icon_button>`, `<.input>`, `<.list_row>`,
+  `<.modal>`, `<.pagination>`, `<.panel>`, `<.pill>`) lives in its own module
+  under this namespace and renders the vocabulary from the clickthrough mockup at
   `/dev/design/clickthrough/*`. Styles live in `assets/css/app.css`.
 
   Importing this module via `use HuddlzWeb.Components` brings every
@@ -21,6 +21,7 @@ defmodule HuddlzWeb.Components do
       import HuddlzWeb.Components.Chip
       import HuddlzWeb.Components.Flash
       import HuddlzWeb.Components.Icon
+      import HuddlzWeb.Components.IconButton
       import HuddlzWeb.Components.Input
       import HuddlzWeb.Components.ListRow
       import HuddlzWeb.Components.Modal

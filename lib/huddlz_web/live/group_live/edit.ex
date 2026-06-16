@@ -160,9 +160,12 @@ defmodule HuddlzWeb.GroupLive.Edit do
                     <label for={@uploads.group_image.ref} class="btn-secondary upload-replace">
                       Replace
                     </label>
-                    <.button variant={:muted} type="button" phx-click="cancel_pending_image">
-                      Remove
-                    </.button>
+                    <.icon_button
+                      name="hero-trash"
+                      tone="danger"
+                      phx-click="cancel_pending_image"
+                      aria-label="Remove"
+                    />
                   </div>
                 </div>
               </div>
@@ -179,14 +182,13 @@ defmodule HuddlzWeb.GroupLive.Edit do
                     <label for={@uploads.group_image.ref} class="btn-secondary upload-replace">
                       Replace
                     </label>
-                    <.button
-                      variant={:muted}
-                      type="button"
+                    <.icon_button
+                      name="hero-trash"
+                      tone="danger"
                       phx-click="remove_image"
                       data-confirm="Are you sure you want to remove this image?"
-                    >
-                      Remove
-                    </.button>
+                      aria-label="Remove"
+                    />
                   </div>
                 </div>
               </div>
@@ -220,14 +222,12 @@ defmodule HuddlzWeb.GroupLive.Edit do
                   <.live_img_preview entry={entry} class="card-cover-img" />
                   <div class="image-preview-foot">
                     <span class="muted">{entry.client_name} · {entry.progress}%</span>
-                    <.button
-                      variant={:muted}
-                      type="button"
+                    <.icon_button
+                      name="hero-x-mark"
                       phx-click="cancel_image_upload"
                       phx-value-ref={entry.ref}
-                    >
-                      Cancel
-                    </.button>
+                      aria-label="Cancel"
+                    />
                   </div>
                 </div>
 

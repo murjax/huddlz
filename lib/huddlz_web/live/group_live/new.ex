@@ -274,9 +274,12 @@ defmodule HuddlzWeb.GroupLive.New do
                   <label for={@uploads.group_image.ref} class="btn-secondary" style="cursor:pointer">
                     Replace
                   </label>
-                  <.button variant={:muted} type="button" phx-click="cancel_pending_image">
-                    Remove
-                  </.button>
+                  <.icon_button
+                    name="hero-trash"
+                    tone="danger"
+                    phx-click="cancel_pending_image"
+                    aria-label="Remove"
+                  />
                 </div>
               </div>
             </div>
@@ -308,19 +311,14 @@ defmodule HuddlzWeb.GroupLive.New do
             <%= for entry <- @uploads.group_image.entries do %>
               <div class="image-preview" style="margin-top:12px">
                 <.live_img_preview entry={entry} class="card-cover-img" />
-                <div
-                  class="muted"
-                  style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:10px"
-                >
-                  <span>{entry.client_name} · {entry.progress}%</span>
-                  <.button
-                    variant={:muted}
-                    type="button"
+                <div class="image-preview-foot">
+                  <span class="muted">{entry.client_name} · {entry.progress}%</span>
+                  <.icon_button
+                    name="hero-x-mark"
                     phx-click="cancel_image_upload"
                     phx-value-ref={entry.ref}
-                  >
-                    Cancel
-                  </.button>
+                    aria-label="Cancel"
+                  />
                 </div>
               </div>
 

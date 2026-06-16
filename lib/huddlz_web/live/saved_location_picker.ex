@@ -132,16 +132,14 @@ defmodule HuddlzWeb.Live.SavedLocationPicker do
             aria-controls={"#{@id}-listbox"}
             disabled={@group_locations == []}
           />
-          <button
+          <.icon_button
             :if={@previous_location}
-            type="button"
+            name="hero-x-mark"
             class="form-clear"
             phx-click="cancel_edit"
             phx-target={@myself}
             aria-label="Cancel"
-          >
-            ×
-          </button>
+          />
         </div>
 
         <div

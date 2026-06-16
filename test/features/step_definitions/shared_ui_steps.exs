@@ -67,6 +67,13 @@ defmodule SharedUISteps do
     Map.merge(context, %{session: session, conn: session})
   end
 
+  step "I click the {string} icon", %{args: [button_text]} = context do
+    session = context[:session] || context[:conn]
+    session = click_button(session, "[aria-label=\"#{button_text}\"]", "")
+
+    Map.merge(context, %{session: session, conn: session})
+  end
+
   step "I click link {string}", %{args: [link_text]} = context do
     session = context[:session] || context[:conn]
 

@@ -279,14 +279,12 @@ defmodule HuddlzWeb.HuddlLive.Edit do
               </div>
               <div class="image-preview-foot">
                 <span>{entry.client_name} · {entry.progress}%</span>
-                <.button
-                  variant={:muted}
-                  type="button"
+                <.icon_button
+                  name="hero-x-mark"
                   phx-click="cancel_image_upload"
                   phx-value-ref={entry.ref}
-                >
-                  Cancel
-                </.button>
+                  aria-label="Cancel"
+                />
               </div>
             </div>
 
@@ -528,9 +526,11 @@ defmodule HuddlzWeb.HuddlLive.Edit do
         <span>New image uploaded. Save to apply.</span>
         <div class="image-preview-actions">
           <label for={@upload_ref} class="btn-secondary" style="cursor:pointer">Replace</label>
-          <.button variant={:muted} type="button" phx-click="cancel_pending_image">
-            Discard
-          </.button>
+          <.icon_button
+            name="hero-x-mark"
+            phx-click="cancel_pending_image"
+            aria-label="Discard"
+          />
         </div>
       </div>
     </div>
@@ -549,9 +549,12 @@ defmodule HuddlzWeb.HuddlLive.Edit do
         <span>Current image.</span>
         <div class="image-preview-actions">
           <label for={@upload_ref} class="btn-secondary" style="cursor:pointer">Replace</label>
-          <.button variant={:muted} type="button" phx-click="remove_current_image">
-            Remove
-          </.button>
+          <.icon_button
+            name="hero-trash"
+            tone="danger"
+            phx-click="remove_current_image"
+            aria-label="Remove"
+          />
         </div>
       </div>
     </div>

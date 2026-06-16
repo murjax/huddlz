@@ -160,16 +160,13 @@ defmodule HuddlzWeb.Live.LocationAutocomplete do
             name="hero-arrow-path"
             class="w-4 h-4 text-base-content/40 animate-spin ml-2"
           />
-          <button
+          <.icon_button
             :if={@show_clear && !@loading}
-            type="button"
+            name="hero-x-mark"
             phx-click="clear"
             phx-target={@myself}
-            class="ml-2 text-base-content/40 hover:text-error transition-colors cursor-pointer"
             aria-label="Clear location"
-          >
-            <.icon name="hero-x-mark" class="w-4 h-4" />
-          </button>
+          />
         </div>
       </div>
 

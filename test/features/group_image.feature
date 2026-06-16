@@ -100,7 +100,7 @@ Feature: Group Image Management
     And I am signed in as "owner@example.com"
     When I visit the edit page for group "Remove Image Group"
     Then I should see "Current image"
-    When I click the "Remove" button
+    When I click the "Remove" icon
     Then I should see "Image removed"
     And the group "Remove Image Group" should not have an image
 

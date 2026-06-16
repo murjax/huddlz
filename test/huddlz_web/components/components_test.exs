@@ -6,6 +6,50 @@ defmodule HuddlzWeb.ComponentsTest do
 
   use HuddlzWeb.Components
 
+  describe "icon_button/1" do
+    test "renders a button containing the named icon" do
+      assigns = %{}
+      html = rendered_to_string(~H|<.icon_button name="hero-x-mark" aria-label="Cancel" />|)
+
+      assert html =~ "<button"
+      assert html =~ ~s(type="button")
+      assert html =~ "icon-btn"
+      assert html =~ "hero-x-mark"
+      assert html =~ ~s(aria-label="Cancel")
+    end
+
+    test "defaults to muted tone with no extra class" do
+      assigns = %{}
+      html = rendered_to_string(~H|<.icon_button name="hero-x-mark" aria-label="Cancel" />|)
+
+      assert html =~ "icon-btn"
+      refute html =~ "danger"
+    end
+
+    test "adds danger class when tone is danger" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(
+          ~H|<.icon_button name="hero-trash" tone="danger" aria-label="Remove" />|
+        )
+
+      assert html =~ "icon-btn danger"
+    end
+
+    test "forwards phx-click, phx-target, and phx-value-ref" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(
+          ~H|<.icon_button name="hero-x-mark" phx-click="cancel" phx-value-ref="abc" aria-label="Cancel" />|
+        )
+
+      assert html =~ ~s(phx-click="cancel")
+      assert html =~ ~s(phx-value-ref="abc")
+    end
+  end
+
   describe "pill/1" do
     test "renders default pill with no extra variant class" do
       assigns = %{}
